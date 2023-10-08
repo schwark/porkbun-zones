@@ -2,16 +2,29 @@ import zonefile_parser
 import requests
 import json
 from glob import glob
+import sys
  
 # read credentials
 with open('config.json') as f:
     creds = json.load(f)
 
-files = glob('*.zone')
+files = [sys.argv[1]] if len(sys.argv) > 1 else glob('*.zone')
 
 for file in files:
     domain = file.replace('.zone','')
     with open(file,"r") as stream:
+        # update name servers
+        ns = [
+            "maceio.ns.porkbun.com",
+            "curitiba.ns.porkbun.com",
+            "salvador.ns.porkbun.com",
+            "fortaleza.ns.porkbun.com"
+        ]
+        r = requests.post(f'https://porkbun.com/api/json/v3/domain/updateNs/{domain}', json={**creds, "ns": ns})
+        result = r.json()
+        print(result)
+        print(f'{domain} : {result["status"]} {result["id"] if "id" in result else result["message"]}')
+        
         content = stream.read()
         records = zonefile_parser.parse(content)
         
