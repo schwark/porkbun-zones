@@ -3,6 +3,7 @@ import requests
 import json
 from glob import glob
 import sys
+import re
  
 # read credentials
 with open('config.json') as f:
@@ -11,7 +12,7 @@ with open('config.json') as f:
 files = [sys.argv[1]] if len(sys.argv) > 1 else glob('*.zone')
 
 for file in files:
-    domain = file.replace('.zone','')
+    domain = re.sub(r'\.zone$', '', file)
     with open(file,"r") as stream:
         # update name servers
         ns = [
