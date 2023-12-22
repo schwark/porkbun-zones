@@ -34,6 +34,8 @@ for file in files:
         print(result)
 
         for record in records:
+            if not 'value' in record.rdata:
+                continue
             insert = {
                 "type": record.rtype
             }
