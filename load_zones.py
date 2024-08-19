@@ -34,8 +34,8 @@ for file in files:
         print(result)
 
         for record in records:
-            if not 'value' in record.rdata:
-                continue
+            if 'value' not in record.rdata and 'priority' not in record.rdata:
+                    continue
             insert = {
                 "type": record.rtype
             }
